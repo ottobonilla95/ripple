@@ -15,6 +15,7 @@ Environment=PORT=4317
 Environment=DATA_DIR=/var/lib/ripple
 Environment=MODEL_CACHE_DIR=/var/lib/ripple/models
 Environment=ALLOWED_HOSTS=ripple.example.com
+Environment=AUTH_CONFIG_FILE=/etc/ripple/auth.json
 ExecStart=/opt/ripple/runtime/bin/node server/index.mjs --production
 Restart=on-failure
 RestartSec=5

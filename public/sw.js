@@ -1,4 +1,4 @@
-const CACHE = 'commonplace-shell-v2';
+const CACHE = 'commonplace-shell-v3';
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(['/', '/icon-192.png', '/manifest.webmanifest'])));
   self.skipWaiting();
@@ -8,10 +8,10 @@ self.addEventListener('activate', event => {
 });
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
-  if (url.origin !== self.location.origin || url.pathname.startsWith('/api/') || event.request.method !== 'GET') return;
+  if (url.origin !== self.location.origin || ['/api/', '/login', '/logout'].some(path => url.pathname.startsWith(path)) || event.request.method !== 'GET') return;
   if (event.request.mode === 'navigate') {
     event.respondWith(fetch(event.request).then(response => {
-      if (response.ok) { const clone = response.clone(); caches.open(CACHE).then(cache => cache.put('/', clone)); }
+      if (response.ok && !response.redirected) { const clone = response.clone(); caches.open(CACHE).then(cache => cache.put('/', clone)); }
       return response;
     }).catch(() => caches.match('/')));
   } else if (url.pathname.startsWith('/assets/')) {

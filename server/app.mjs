@@ -2,10 +2,12 @@ import express from 'express';
 import { randomUUID } from 'node:crypto';
 import { mkdir, writeFile, unlink } from 'node:fs/promises';
 import { resolve } from 'node:path';
+import { installAuth } from './auth.mjs';
 
-export function createApp({ store, search, transcribe, modelStatus, dataDir }) {
+export function createApp({ store, search, transcribe, modelStatus, dataDir, authConfig = null }) {
   const app = express();
   app.disable('x-powered-by');
+  if (authConfig) installAuth(app, authConfig);
   app.use('/api', (req, res, next) => {
     res.set('Cache-Control', 'no-store');
     const host = req.headers.host || '';
@@ -19,7 +21,7 @@ export function createApp({ store, search, transcribe, modelStatus, dataDir }) {
     next();
   });
   app.use(express.json({ limit: '160kb' }));
-  app.get('/api/status', (req, res) => res.json({ ...store.stats(), pending: search.pending(), models: modelStatus() }));
+  app.get('/api/status', (req, res) => res.json({ ...store.stats(), pending: search.pending(), models: modelStatus(), authEnabled: Boolean(authConfig) }));
   app.get('/api/insights', (req, res) => res.json(store.list()));
   app.get('/api/review', (req, res) => res.json(store.review()));
   app.get('/api/search', async (req, res) => {

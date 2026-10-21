@@ -1,7 +1,4 @@
 ripple.example.com {
-    basic_auth {
-        otto REPLACE_WITH_CADDY_PASSWORD_HASH
-    }
     encode zstd gzip
     request_body {
         max_size 16MB

@@ -101,10 +101,10 @@ function App() {
     <div className={`toast ${toast ? 'visible' : ''}`} role="status" aria-live="polite">{toast}</div>
     <dialog ref={dialog} onCancel={() => setSettings(false)} className="settings-dialog">
       <div className="dialog-top"><h2>Settings</h2><button className="icon-button" onClick={() => setSettings(false)} aria-label="Close settings"><X size={18} /></button></div>
-      <p>{status?.total ?? 0} insights saved on this Mac.</p>
-      <p>Phone access needs a private HTTPS address.</p>
+      <p>{status?.total ?? 0} insights saved.</p>
       {!!status?.failed && <button onClick={async () => { try { await post('/index/retry', {}); notify('Retrying indexing.'); await refresh(); } catch (err) { setError(err.message); } }}>Retry search indexing</button>}
       {library.length === 0 && <button className="text-button" disabled={loading} onClick={addExamples}>Add sample insights</button>}
+      {status?.authEnabled && <form method="post" action="/logout"><button className="text-button" type="submit">Sign out</button></form>}
     </dialog>
   </div>;
 }

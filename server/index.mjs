@@ -4,11 +4,12 @@ import { createStore } from './store.mjs';
 import { createSearch } from './search.mjs';
 import { embed, transcribe, modelStatus, EMBEDDING_MODEL } from './models.mjs';
 import { createApp } from './app.mjs';
+import { loadAuthConfig } from './auth.mjs';
 
 const dataDir = resolve(process.env.DATA_DIR || 'data');
 const store = createStore(resolve(dataDir, 'commonplace.sqlite'));
 const search = createSearch(store, embed, EMBEDDING_MODEL);
-const app = createApp({ store, search, transcribe, modelStatus, dataDir });
+const app = createApp({ store, search, transcribe, modelStatus, dataDir, authConfig: loadAuthConfig() });
 const production = process.argv.includes('--production');
 let vite;
 if (production) {
