@@ -1,0 +1,16 @@
+ripple.example.com {
+    basic_auth {
+        otto REPLACE_WITH_CADDY_PASSWORD_HASH
+    }
+    encode zstd gzip
+    request_body {
+        max_size 16MB
+    }
+    header {
+        X-Content-Type-Options nosniff
+        Referrer-Policy same-origin
+    }
+    reverse_proxy 127.0.0.1:4317 {
+        header_up -Authorization
+    }
+}

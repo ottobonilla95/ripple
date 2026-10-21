@@ -70,3 +70,5 @@ npm run build
 The regular tests use isolated temporary databases. The semantic check uses the real local embedding model and tests paraphrased questions against unrelated insights. `npm run models:prepare` also loads the real transcription model. Browser QA covers the UI and mocked microphone where hardware is unavailable; see `docs/verification.md` for actual results.
 
 See [architecture](docs/architecture.md) for the implementation and future hosting plan.
+
+See [Droplet deployment](docs/deployment.md) for the running server, resource measurements, and operations.
