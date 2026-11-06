@@ -110,3 +110,113 @@ audio { display: block; width: 100%; max-width: 100%; height: 40px; margin-top: 
   details[open] > summary::before { content: '−'; }
 }
 @media(prefers-reduced-motion: reduce) { .spin { animation: none; } }
+
+/* The return ritual. Mobile is the primary canvas. */
+:root {
+  --background: #0b1420;
+  --surface: #111f2d;
+  --border: #293846;
+  --muted: #9baab7;
+  color: #e3eaf0;
+  background: var(--background);
+}
+body { background: radial-gradient(ellipse at 50% 64%, #172a3a55, transparent 58%), var(--background); }
+button { min-height: 44px; color: #dce6ec; background: #172837; border-color: #334653; border-radius: 10px; }
+button:hover { background: #203646; }
+button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible, summary:focus-visible, a:focus-visible { outline-color: #b3d5e0; }
+.app-shell { width: min(100% - 40px, 640px); padding: max(20px, env(safe-area-inset-top)) 0 calc(100px + env(safe-area-inset-bottom)); }
+.app-header { height: 42px; margin-bottom: 26px; }
+.brand { display: flex; align-items: center; gap: 10px; font-family: Georgia, 'Times New Roman', serif; font-size: 25px; font-weight: 400; letter-spacing: -.9px; color: #e1e9ee; }
+.brand-ripple { width: 24px; height: 12px; border: 1px solid #a0bbc9; border-radius: 50%; position: relative; transform: rotate(-17deg); }
+.brand-ripple::after { content: ''; position: absolute; inset: 3px 5px; border: 1px solid #a0bbc9; border-radius: 50%; }
+.app-header .icon-button { color: #9baab7; }
+.navigation { position: fixed; z-index: 4; bottom: 0; left: 0; right: 0; display: flex; justify-content: center; gap: 0; margin: 0; padding: 8px 14px calc(8px + env(safe-area-inset-bottom)); border-top: 1px solid #99b2c21a; border-bottom: 0; background: #0b1420f2; backdrop-filter: blur(18px); }
+.navigation button { width: min(31%, 150px); min-height: 50px; padding: 4px 12px; gap: 5px; flex-direction: column; color: #96a7b6; font-size: 11px; border-radius: 8px; }
+.navigation button.active { color: #e1edf2; }
+.navigation button.active::after { display: none; }
+.navigation button.active svg { filter: drop-shadow(0 0 5px #aacedd55); }
+.navigation button:hover { background: #a0bbca0a; }
+.icon-button { background: transparent; }
+.text-button { background: transparent; color: #a9becb; }
+.text-button:hover { background: transparent; color: #edf5fa; }
+.primary { background: #c6dce5; border-color: #c6dce5; color: #10212d; }
+.primary:hover { background: #e4f0f5; border-color: #e4f0f5; }
+input, select, textarea { border-radius: 10px; color: #e3eaf0; }
+input::placeholder, textarea::placeholder { color: #8c9dac; }
+.search-form { background: var(--surface); border-radius: 12px; }
+.settings-dialog { background: #111f2d; border-color: #334653; border-radius: 16px; }
+.toast { bottom: calc(86px + env(safe-area-inset-bottom)); background: #172837; border-color: #334653; border-radius: 12px; }
+.return-view .app-header { margin-bottom: 14px; }
+.pensieve { min-height: calc(100svh - 176px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); display: flex; flex-direction: column; }
+.ritual-heading { display: flex; align-items: center; justify-content: space-between; color: #92a6b6; font-size: 11px; padding-top: 7px; }
+.daily-progress { display: flex; gap: 7px; align-items: center; }
+.daily-progress i { width: 4px; height: 4px; border-radius: 50%; background: #526372; }
+.daily-progress i.current { background: #d2e4ea; box-shadow: 0 0 8px #c8e1ed55; }
+.daily-progress i.complete { background: #91b2c1; }
+.thought-space { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 0 12px; position: relative; z-index: 1; }
+.floating-thought { width: 100%; text-align: center; animation: thought-arrive 1.7s cubic-bezier(.16,1,.3,1) both; overflow-wrap: anywhere; }
+.thought-caption { color: #92a7b7; font-size: 11px; margin-bottom: 25px; }
+.thought-text { font-family: 'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif; font-size: clamp(25px, 6.6vw, 32px); font-weight: 400; line-height: 1.4; letter-spacing: -.55px; text-wrap: pretty; white-space: pre-wrap; max-width: 580px; margin: 0 auto; color: #e3eaf0; }
+.long-thought .thought-text { font-size: clamp(21px, 5vw, 27px); }
+.thought-origin { display: flex; align-items: center; justify-content: center; gap: 9px; color: #a0b1be; font-size: 11px; margin-top: 24px; }
+.origin-dot { width: 2px; height: 2px; border-radius: 50%; background: currentColor; }
+.thought-context { max-width: 440px; margin: 14px auto 0; text-align: left; font-size: 13px; color: #b2c2cd; }
+.thought-context summary { list-style: none; display: flex; align-items: center; justify-content: center; gap: 5px; width: fit-content; min-height: 44px; margin: 0 auto; color: #9aaebb; font-size: 11px; }
+.thought-context summary::-webkit-details-marker { display: none; }
+.thought-context summary::before { display: none; }
+.thought-context[open] summary svg { transform: rotate(90deg); }
+.thought-context > div { padding: 12px 16px; border-left: 1px solid #586f7e; }
+.thought-context p + p { margin-top: 12px; }
+.thought-context a { color: #c4d9e4; }
+.thought-options { display: flex; justify-content: space-between; gap: 12px; margin-top: 10px; }
+.thought-options button { font-size: 11px; }
+.thought-answer { color: #c5d6df; margin-top: 22px; white-space: pre-wrap; font-size: 16px; }
+.basin-space { position: relative; flex-shrink: 0; margin: 0 -16px; padding-top: 10px; text-align: center; }
+.basin { position: relative; display: block; width: min(84%, 310px); aspect-ratio: 480 / 250; padding: 0; margin: 0 auto; border: 0; border-radius: 50%; background: transparent; -webkit-tap-highlight-color: transparent; touch-action: manipulation; isolation: isolate; }
+.basin:hover, .basin:disabled { background: transparent; }
+.basin:disabled { opacity: 1; }
+.basin:focus-visible { outline-offset: -16px; }
+.basin-shape { position: absolute; z-index: 1; inset: 0; width: 100%; height: auto; pointer-events: none; transition: filter .7s; }
+.basin-magic { position: absolute; z-index: 2; bottom: 0; left: 0; width: 100%; height: auto; aspect-ratio: 480 / 450; pointer-events: none; opacity: .85; mask-image: linear-gradient(transparent, #000 17%, #000); }
+.basin-aura { position: absolute; z-index: 0; width: 85%; height: 75%; left: 7.5%; top: -4%; background: radial-gradient(ellipse, #c4e0ec18, #9dcce708 38%, transparent 68%); filter: blur(12px); pointer-events: none; transition: opacity .7s; }
+.is-stirring .basin-shape { filter: brightness(1.14); }
+.is-stirring .basin-magic { opacity: 1; }
+.is-stirring .basin-aura { opacity: 1.8; }
+.pixel-basin { width: min(84%, 320px); }
+.pixel-basin .pixel-basin-art { image-rendering: pixelated; mask-image: none; opacity: 1; }
+.thought-thread { display: none; }
+.memory-wisp { position: absolute; pointer-events: none; height: 180px; width: 90px; bottom: 50%; left: calc(50% - 45px); stroke: #c8e6ef; stroke-width: .7; opacity: 0; filter: drop-shadow(0 0 4px #b6e7fa); }
+.is-changing .memory-wisp { animation: thought-wisp .8s ease-out both; }
+.is-changing .floating-thought { opacity: .45; transition: opacity .3s; }
+.basin-invitation { min-height: 66px; margin-top: -5px; padding: 0 14px 8px; }
+.basin-label { min-height: 44px; padding: 0 8px; background: transparent; border: 0; font-size: 12px; color: #bdcfd8; }
+.basin-label:hover { background: transparent; color: #eff9ff; }
+.basin-invitation p { color: #8da2b2; font-size: 10px; }
+.ritual-empty { max-width: 380px; text-align: center; padding: 16px 0; }
+.quiet-symbol { display: inline-flex; color: #b5cdd9; margin-bottom: 25px; }
+.ritual-empty h1 { font: 400 31px/1.3 'Iowan Old Style', Palatino, Georgia, serif; letter-spacing: -.6px; white-space: pre-line; color: #dbe6ed; }
+.ritual-empty p { font-size: 13px; color: #a5b6c4; max-width: 270px; margin: 20px auto 0; }
+.empty-link { font-size: 12px; margin-top: 14px; }
+@keyframes thought-arrive { from { opacity: 0; transform: translateY(18px); filter: blur(5px); } to { opacity: 1; transform: translateY(0); filter: blur(0); } }
+@keyframes thought-wisp { 0% { opacity: 0; transform: translateY(-100px) scaleY(1); } 35% { opacity: .55; } 100% { opacity: 0; transform: translateY(30px) scaleY(.2); } }
+@media (min-width: 700px) {
+  .app-shell { padding-top: 34px; }
+  .app-header { margin-bottom: 36px; }
+  .pensieve { min-height: calc(100svh - 195px); }
+  .ritual-heading { padding-top: 18px; }
+  .thought-space { padding: 44px 0 16px; }
+  .thought-text { font-size: 36px; }
+  .thought-caption { margin-bottom: 28px; }
+  .basin-space { padding-top: 8px; }
+}
+@media (max-height: 740px) and (max-width: 699px) {
+  .thought-space { padding-top: 28px; }
+  .thought-caption { margin-bottom: 18px; }
+  .thought-text { font-size: 24px; }
+  .thought-origin { margin-top: 18px; }
+  .basin { max-width: 275px; }
+  .basin-invitation { margin-top: -12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}

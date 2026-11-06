@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { Search, X, LoaderCircle, Settings2 } from 'lucide-react';
+import { Search, X, LoaderCircle, Settings2, Library, Plus, Waves } from 'lucide-react';
 import Capture from './Capture';
 import InsightCard from './InsightCard';
+import Pensieve from './Pensieve';
 import { api, post } from './api';
 import './styles.css';
 
@@ -26,11 +27,17 @@ function App() {
   const [capturing, setCapturing] = useState(false);
   const toastTimer = useRef(null);
   const searchGeneration = useRef(0);
+  const pendingReviews = useRef(new Set());
   const dialog = useRef(null);
   const [online, setOnline] = useState(navigator.onLine);
   function notify(message) { setToast(message); clearTimeout(toastTimer.current); toastTimer.current = setTimeout(() => setToast(''), 4500); }
   async function refresh() {
-    try { const [r, l, s] = await Promise.all([api('/review'), api('/insights'), api('/status')]); setReview(r); setLibrary(l); setStatus(s); setError(''); }
+    try {
+      const [r, l, s] = await Promise.all([api('/review'), api('/insights'), api('/status')]);
+      pendingReviews.current = new Set(r.map(item => item.id));
+      setReview(r.length ? r : l.filter(item => item.intent !== 'reference' && item.review_enabled !== 0));
+      setLibrary(l); setStatus(s); setError('');
+    }
     catch (err) { setError(err.message); } finally { setLoading(false); }
   }
   useEffect(() => {
@@ -49,10 +56,17 @@ function App() {
     finally { if (generation === searchGeneration.current) setSearching(false); }
   }
   async function feedback(id, action) {
-    try { await post(`/insights/${id}/review`, { action }); setReview(old => old.filter(item => item.id !== id));
-      const [l, s] = await Promise.all([api('/insights'), api('/status')]); setLibrary(l); setStatus(s);
-      notify(action === 'stop' ? 'Removed from reviews.' : action === 'again' || action === 'later' ? 'Back tomorrow.' : 'Reviewed.');
-    } catch (err) { setError(err.message); }
+    // Re-reading a completed loop does not count as another scheduled review.
+    if ((action === 'used' || action === 'remembered') && !pendingReviews.current.has(id)) return true;
+    try { await post(`/insights/${id}/review`, { action }); }
+    catch (err) { setError(err.message); return false; }
+    pendingReviews.current.delete(id);
+    setError('');
+    if (action === 'stop' || action === 'again' || action === 'later') notify(action === 'stop' ? 'Removed from reviews.' : 'Back tomorrow.');
+    try { const [l, s] = await Promise.all([api('/insights'), api('/status')]); setLibrary(l); setStatus(s); }
+    catch (err) { setError(err.message); }
+    if (action === 'stop' || action === 'again' || action === 'later') setReview(old => old.filter(item => item.id !== id));
+    return true;
   }
   async function remove(id) {
     if (!window.confirm('Delete this insight and its search index? This cannot be undone.')) return;
@@ -64,25 +78,20 @@ function App() {
     try { for (const item of examples) await post('/insights', item); await refresh(); setSettings(false); notify('Examples added.'); }
     catch (err) { setError(err.message); setLoading(false); }
   }
-  const nav = [['review','Review'],['find','Find'],['save','Save']];
+  const nav = [['review','Return', Waves],['find','Collection', Library],['save','Save', Plus]];
   const items = results ? results.results : library;
-  return <div className="app-shell">
+  return <div className={`app-shell ${tab === 'review' ? 'return-view' : ''}`}>
     <header className="app-header">
-      <span className="brand">commonplace</span>
+      <span className="brand"><span className="brand-ripple" aria-hidden="true" />ripple</span>
       <button className="icon-button" onClick={() => setSettings(true)} aria-label="Settings"><Settings2 size={17} /></button>
     </header>
     <nav className="navigation" aria-label="Main navigation">
-      {nav.map(([id,label]) => <button key={id} disabled={capturing && id !== tab} className={tab === id ? 'active' : ''} aria-current={tab === id ? 'page' : undefined} onClick={() => { setTab(id); setError(''); }}>{label}</button>)}
+      {nav.map(([id,label, Icon]) => <button key={id} disabled={capturing && id !== tab} className={tab === id ? 'active' : ''} aria-current={tab === id ? 'page' : undefined} onClick={() => { setTab(id); setError(''); }}><Icon size={19} strokeWidth={1.5} /><span>{label}</span></button>)}
     </nav>
     <main className="main" aria-label={nav.find(([id]) => id === tab)[1]}>
       {!online && <div className="notice">Offline. Your draft is saved on this device.</div>}
       {error && <div className="error" role="alert">{error} <button className="text-button" onClick={refresh}>Try again</button></div>}
-      {tab === 'review' && <>
-        {loading ? <div className="loading"><LoaderCircle className="spin" size={17} /> Loading…</div>
-        : library.length === 0 ? <div className="empty-state"><h1>Nothing to review.</h1><button className="primary" onClick={() => setTab('save')}>Save an insight</button></div>
-        : review.length === 0 ? <div className="empty-state"><h1>Done for today.</h1><button className="text-button" onClick={() => setTab('find')}>View saved insights</button></div>
-        : <><div className="section-line">{review.length} to review</div><div className="review-grid">{review.map(item => <InsightCard key={item.id} item={item} review onFeedback={feedback} />)}</div></>}
-      </>}
+      {tab === 'review' && <Pensieve items={review} loading={loading} empty={library.length === 0} onFeedback={feedback} onSave={() => setTab('save')} />}
       {tab === 'save' && <Capture onSaved={refresh} notify={notify} onCapturingChange={setCapturing} />}
       {tab === 'find' && <>
         <form className="search-form" onSubmit={find}>

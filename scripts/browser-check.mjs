@@ -12,12 +12,12 @@ const errors = [];
 page.on('pageerror', error => errors.push(error.message));
 try {
   await page.goto(base);
-  await expect(page.getByRole('heading', { name: 'Nothing to review.' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Some things are worth coming back to.' })).toBeVisible();
   await page.getByRole('button', { name: 'Settings', exact: true }).click();
   await page.getByRole('button', { name: 'Add sample insights' }).click();
-  await expect(page.locator('.insight-card')).toHaveCount(3);
+  await expect(page.locator('.floating-thought')).toHaveCount(1);
   await page.screenshot({ path: 'data/qa-fixtures/desktop-review.png', fullPage: true });
-  await page.getByRole('button', { name: 'Find', exact: true }).first().click();
+  await page.getByRole('button', { name: 'Collection', exact: true }).first().click();
   await page.getByRole('textbox', { name: 'Ask your collection' }).fill('Someone I care about is upset. How should I respond?');
   await page.locator('.search-form').getByRole('button', { name: 'Search', exact: true }).click();
   await expect(page.locator('.library-grid .insight-card').first()).toContainText('Before offering advice', { timeout: 60000 });
@@ -32,23 +32,23 @@ try {
   await page.getByRole('button', { name: 'Save insight' }).click();
   await expect(page.getByRole('textbox', { name: 'Your insight' })).toHaveValue('');
   await page.reload();
-  await page.getByRole('button', { name: 'Find', exact: true }).first().click();
+  await page.getByRole('button', { name: 'Collection', exact: true }).first().click();
   await expect(page.locator('.library-grid')).toContainText('A durable test thought about telescope mirrors.');
   console.log('PASS: save, source/note persistence, and reload.');
 
-  await page.getByRole('button', { name: /^Review/ }).click();
-  await page.getByRole('button', { name: 'Show answer' }).click();
-  await expect(page.locator('.answer-text')).toContainText('Authentication verifies');
-  await page.getByRole('button', { name: 'Remembered', exact: true }).click();
-  await expect(page.locator('.insight-card')).toHaveCount(2);
-  for (let remaining = 2; remaining > 0; remaining--) {
-    await page.getByRole('button', { name: 'Done', exact: true }).first().click();
-    await expect(page.locator('.insight-card')).toHaveCount(remaining - 1);
+  await page.getByRole('button', { name: 'Return', exact: true }).click();
+  await page.getByRole('button', { name: 'Reveal this thought' }).click();
+  await expect(page.locator('.thought-text')).toContainText('Authentication verifies');
+  await page.getByRole('button', { name: 'Let this thought settle and continue', exact: true }).click();
+  await expect(page.locator('.daily-progress')).toHaveAttribute('aria-label', 'Thought 2 of 3');
+  for (let step = 0; step < 2; step++) {
+    await page.getByRole('button', { name: 'Let this thought settle and continue', exact: true }).click();
+    await expect(page.locator('.daily-progress')).toHaveAttribute('aria-label', step === 0 ? 'Thought 3 of 3' : 'Thought 1 of 3');
   }
-  await expect(page.getByRole('heading', { name: 'Done for today.' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Reveal this thought', exact: true })).toBeVisible();
   await page.reload();
-  await expect(page.getByRole('heading', { name: 'Done for today.' })).toBeVisible();
-  console.log('PASS: reveal, spaced review feedback, and no same-day refill after reload.');
+  await expect(page.locator('.floating-thought')).toHaveCount(1);
+  console.log('PASS: recall, scheduled review feedback, and looping after completion and reload.');
 
   await page.getByRole('button', { name: 'Save', exact: true }).click();
   await page.setViewportSize({ width: 390, height: 844 });
@@ -66,7 +66,7 @@ try {
   await expect(page.getByRole('button', { name: 'Save insight' })).toBeEnabled();
   await page.getByRole('button', { name: 'Save insight' }).click();
   await expect(page.getByRole('textbox', { name: 'Your insight' })).toHaveValue('');
-  await page.getByRole('button', { name: 'Find', exact: true }).first().click();
+  await page.getByRole('button', { name: 'Collection', exact: true }).first().click();
   await expect(page.locator('.library-grid audio')).toHaveCount(1);
   console.log('PASS: real MediaRecorder → upload → local Whisper transcript → save with replay.');
 

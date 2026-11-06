@@ -28,7 +28,7 @@ The development server does not register the service worker. Both servers use po
 ## What works
 
 - **Save:** written thoughts, pasted passages, links as source references, and short voice captures. Voice recordings are retained, transcribed locally, and editable before saving. Links are not automatically scraped.
-- **Review:** at most three items assigned per Dublin calendar day, with a reason for appearing. Practice hides the saved passage until reveal; feedback changes the next due date. Reference-only items stay in Find. Stopping resurfacing retains the original.
+- **Return:** one thought at a time, looping from the last back to the first. The scheduled set contains at most three items per Dublin calendar day; once reviewed, they remain readable without repeated schedule updates. With no due set, Return browses eligible saved thoughts. Practice hides the passage until reveal on every pass. Reference-only and stopped items stay in Collection. Stopping resurfacing retains the original.
 - **Find:** questions and exact phrases retrieve saved insights using local embeddings plus SQLite FTS5. Every result retains the source and your note. The app retrieves material; it does not invent an AI answer.
 - Persistence across reloads and server restarts. Meaning indexing happens after the durable save, with retry and an honest wording-only fallback if the model is unavailable.
 - Home-screen manifest, icons, mobile layouts, and production app-shell caching. Written drafts stay in this browser. Offline saving/sync and offline audio capture are not implemented.

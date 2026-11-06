@@ -1,5 +1,17 @@
 # Verification of the POC
 
+## Pensieve interface — 6 November 2026
+
+An optional pixel-art experiment is available at `/?basin=pixel`; the normal URL retains the soft illustrated bowl. The pixel version draws the bowl, inward silver spiral, dithered smoke, and sparks on a 160 × 150 canvas with nearest-neighbour scaling and a restricted palette at 12 fps. The same mobile, interaction, and reduced-motion browser checks passed with `QA_URL='http://127.0.0.1:4317/?basin=pixel'`. The experiment changes only the basin.
+
+The basin uses a small illustrated SVG bowl, restored after the photoreal stone draft. Procedural canvas layers animate flat cloudy sheets spiralling inward, rising mist, curling filaments, and sparse motes. Touch feedback gently accelerates the currents and brightens the rim. Rendering is capped at 24 fps with a 1.5 pixel-ratio cap; it pauses when hidden or offscreen and renders a static frame for reduced motion. The browser check verifies that normal frames change and reduced-motion frames stay identical. The unused photoreal draft and its generation prompt are archived in `design/`; the app loads no basin image asset.
+
+The mobile Return screen presents one thought above an animated silver basin. Touching the basin advances through the current set and loops from the last thought back to the first. Only the first scheduled pass updates review timing. After reload, if nothing is due, eligible saved thoughts remain browsable; reference-only and stopped items are excluded. Recall items require a fresh reveal on each pass. Source, note, audio, and scheduling actions remain available under the disclosure. The server's daily assignment and database schema are unchanged. Collection and Save use bottom navigation.
+
+`scripts/pensieve-check.mjs` verifies the interface with intercepted fixture responses, without changing any saved collection. It passed for both bowl styles in Chrome at 320, 390, 430, and 1440px: no horizontal overflow, reachable basin above navigation, source disclosure, failed-feedback retry, recall reveal/reset, two complete loops without duplicate review writes, continued browsing after reload, single-item looping, stopped/reference-only exclusion, collection/capture navigation, long-passage scrolling, empty state, reduced motion, and no browser JavaScript errors. Mobile, desktop, and Save layouts were visually inspected; loop screenshots are retained with the UI fixtures. The production build passed; all seven existing storage/API/auth tests passed earlier in this interface update. Physical iPhone/Safari testing is still outstanding.
+
+Run the interface check against a local server with `BROWSER_EXECUTABLE='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' node scripts/pensieve-check.mjs`. The local design preview uses a separate collection at `data/ui-preview/commonplace.sqlite` with labelled sample thoughts.
+
 ## Minimal dark interface update
 
 The interface now uses a fixed near-black theme, system fonts, one column, three text navigation buttons, and collapsed optional capture fields. The sidebar, decorative headings, slogans, prompts, and separate card panels were removed. Browser/PWA theme colors and icons match the dark appearance.

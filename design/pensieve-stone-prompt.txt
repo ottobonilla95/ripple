@@ -1,0 +1,11 @@
+Pensieve stone asset — 6 November 2026
+
+Generated with the built-in image_gen tool, transparent_background=true.
+Original: design/pensieve-stone-source.png
+Archived web asset: design/pensieve-stone.webp (1152 × 768, alpha preserved).
+This photoreal draft was replaced by the smaller illustrated bowl at the user’s request. Neither image is loaded by the app.
+The water movement, smoke, and particles are live canvas effects, not baked into this asset.
+
+Final generation prompt:
+
+Use case: stylized-concept. Asset type: photoreal cinematic fantasy prop cutout for an interactive mobile UI. Primary request: an ancient Pensieve basin inspired by the Harry Potter films, a thick carved weathered pale limestone bowl holding luminous liquid silver memories. Object only, genuinely transparent background. Composition: one symmetrical low wide round basin, camera looks down into it from a three-quarter elevated front view, orthographic-like perspective. Landscape canvas 3:2. Entire basin centered, spanning roughly 86% of canvas width. The mouth is a wide horizontal ellipse centered around 50% x, 47% y, with liquid surface roughly 65% of canvas width and 23% of canvas height; the bowl body extends to about 80% canvas height. No pedestal or legs. Thick worn stone lip with small ancient carved glyph-like markings and chipped edges, substantial curved stone sides with shallow engraved interlacing Celtic motifs, realistic aged stone pores and patina. Pool is milky mercury silver with faint pearlescent white-blue cloudy whorls and brighter center; enough contrast to distinguish from dark rim. Cold light from within illuminates inside lip and stone carvings. Very subtle cool side light reveals stone body against a dark navy app. Tangible high-end film prop photography, moody, mysterious, restrained magic. Keep the air above the bowl empty and transparent: smoke and particles will be animated in code. No baked smoke. No background, floor, scenery, person, hands, wand, words, logos, watermark, futuristic metal, neon, cartoon, flat illustration, oversaturated cyan. Crisp clean transparent silhouette including through the empty space around the bowl.

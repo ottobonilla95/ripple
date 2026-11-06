@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Mic, Square, LoaderCircle, RotateCcw } from 'lucide-react';
 import { api, post } from './api';
 
-const initial = { content: '', title: '', note: '', source: '', source_type: 'thought', intent: 'revisit', question: '', audio_id: null };
+const initial = { content: '', note: '', source: '', source_type: 'thought', intent: 'revisit', question: '', audio_id: null };
 function readDraft() {
   try { return { ...initial, ...JSON.parse(localStorage.getItem('commonplace-draft') || '{}') }; }
   catch { return initial; }
